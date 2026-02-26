@@ -1,0 +1,107 @@
+import java.util.Scanner;
+
+class BankManagementSystem {
+
+    static class Customer {
+        String name;
+        int age;
+        double salary;
+        int experience;
+        String jobSector;
+        double loanAmount;
+        int loanMonths;
+
+        Customer(String name, int age, double salary, int experience, String jobSector,
+                 double loanAmount, int loanMonths) {
+            this.name = name;
+            this.age = age;
+            this.salary = salary;
+            this.experience = experience;
+            this.jobSector = jobSector;
+            this.loanAmount = loanAmount;
+            this.loanMonths = loanMonths;
+        }
+    }
+
+    
+    public static boolean checkEligibility(Customer c) {
+        return (c.age >= 21 && c.age <= 60 &&
+                c.salary >= 20000 &&
+                c.experience >= 1);
+    }
+
+    
+    public static double calculateInterest(Customer c) {
+        double annualRate;
+
+        
+        if (c.jobSector.equalsIgnoreCase("government")) {
+            annualRate = 8.0;
+        } else if (c.jobSector.equalsIgnoreCase("private")) {
+            annualRate = 10.0;
+        } else {
+            annualRate = 12.0;
+        }
+
+        double monthlyRate = annualRate / 12 / 100;
+        return c.loanAmount * monthlyRate;
+    }
+
+    
+    public static double calculateFine(double monthlyInterest, int delayedMonths) {
+        double fineRate = 0.02; 
+        return monthlyInterest * fineRate * delayedMonths;
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("===== BANK MANAGEMENT SYSTEM =====");
+
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Age: ");
+        int age = sc.nextInt();
+
+        System.out.print("Enter Monthly Salary: ");
+        double salary = sc.nextDouble();
+
+        System.out.print("Enter Years of Experience: ");
+        int experience = sc.nextInt();
+        sc.nextLine(); 
+
+        System.out.print("Enter Job Sector (Government/Private/Others): ");
+        String jobSector = sc.nextLine();
+
+        System.out.print("Enter Loan Amount: ");
+        double loanAmount = sc.nextDouble();
+
+        System.out.print("Enter Loan Duration (in months): ");
+        int loanMonths = sc.nextInt();
+
+        Customer customer = new Customer(name, age, salary, experience,
+                                          jobSector, loanAmount, loanMonths);
+
+        if (checkEligibility(customer)) {
+            System.out.println("\n Loan Approved!");
+
+            double monthlyInterest = calculateInterest(customer);
+            System.out.println("Monthly Interest: ₹" + monthlyInterest);
+
+            System.out.print("Enter number of delayed months (if any): ");
+            int delayedMonths = sc.nextInt();
+
+            double fine = calculateFine(monthlyInterest, delayedMonths);
+            System.out.println("Fine Amount: ₹" + fine);
+
+            System.out.println("Total Payable per Month: ₹" + (monthlyInterest + fine));
+
+        } else {
+            System.out.println("\n Loan Not Approved! Eligibility criteria not met.");
+        }
+
+        sc.close();
+    }
+}
